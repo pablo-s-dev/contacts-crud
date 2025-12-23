@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  extensions = [citext]
+  url = env("DATABASE_URL")
+}
+
+model Contact {
+  id        String   @id @default(uuid())
+  name      String   @db.Citext
+  email     String   @unique @db.Citext
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])  // Useful for sorting by name
+  @@index([createdAt])  // Useful for sorting by createdAt
+  // email already has index from @unique constraint
+  @@map("contacts")
+}
