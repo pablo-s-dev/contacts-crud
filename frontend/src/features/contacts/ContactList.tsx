@@ -78,7 +78,7 @@ export function ContactList({
                 Created <SortIcon field="createdAt" sort={sort} order={order} />
               </button>
             </TableHead>
-            <TableHead className="text-right w-[120px]">Actions</TableHead>
+            <TableHead className="text-center w-[120px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -130,7 +130,7 @@ export function ContactList({
                 <TableCell>
                   {format(new Date(contact.createdAt), "MMM dd, yyyy")}
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="text-center">
                   <div className="inline-flex gap-2 justify-end">
                     <motion.div
                       whileHover={{ scale: 1.1 }}

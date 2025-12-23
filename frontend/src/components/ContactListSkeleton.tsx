@@ -17,7 +17,7 @@ export function ContactListSkeleton() {
             <TableHead>Email</TableHead>
             <TableHead>Phone</TableHead>
             <TableHead>Created</TableHead>
-            <TableHead className="text-right w-[120px]">Actions</TableHead>
+            <TableHead className="text-center w-[120px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -35,7 +35,7 @@ export function ContactListSkeleton() {
               <TableCell>
                 <div className="h-4 w-24 bg-muted animate-pulse rounded" />
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="text-center">
                 <div className="h-8 w-16 bg-muted animate-pulse rounded ml-auto" />
               </TableCell>
             </TableRow>
