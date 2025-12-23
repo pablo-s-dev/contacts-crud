@@ -248,6 +248,7 @@
  - **Normalização**: devemos salvar telefone sempre em E.164? (hoje é string livre, mas validada).
  - **Dark mode**: vocês querem que eu implemente dark mode? Se sim, existe alguma preferência de abordagem (Tailwind + CSS variables / design tokens) e critérios de aceite?
  - **Paginação**: a API deve expor **apenas** offset (mais simples) ou também keyset (mais escalável)?
+ - **Idiomas**: Quais idiomas suportar?
  
  ### Mini‑ADRs (Decisões arquiteturais)
  
