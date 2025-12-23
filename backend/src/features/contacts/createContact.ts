@@ -7,6 +7,7 @@ import { deleteCache } from '../../utils/cache';
 import { logger } from '../../utils/logger';
 import { getCorrelationId } from '../../utils/correlation';
 import { dbQueryDuration, dbQueryErrors } from '../../utils/metrics';
+import { Prisma } from '@prisma/client';
 
 export async function createContact(app: FastifyInstance) {
   app.post('/contacts', {
@@ -28,7 +29,7 @@ export async function createContact(app: FastifyInstance) {
 
     try {
       // Use transaction for atomicity
-      const contact = await prisma.$transaction(async (tx) => {
+      const contact = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         // Check for existing email within transaction
         const existing = await tx.contact.findUnique({ where: { email } });
         if (existing) {
