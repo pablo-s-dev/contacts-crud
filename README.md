@@ -39,11 +39,6 @@
    - Backend: `vitest` com testes de integração usando `app.inject`.
    - Frontend: `vitest` + Testing Library (testes de componentes).
  
- ## O que ficou de fora / pontos para evolução
- 
- - **ESLint + Prettier no backend**: o frontend tem `eslint.config.js`, mas o backend não possui configuração equivalente neste repositório. Em uma iteração seguinte eu adicionaria `eslint` + `prettier` + scripts (`lint`, `format`) no `backend/`.
- - **Padronização do seed vs validação de telefone**: a API exige telefone válido (via `libphonenumber-js`), mas o seed usa `faker.phone.number()` e pode gerar formatos não compatíveis. Em produção eu ajustaria o seed para gerar E.164/BR válidos.
- 
  ## Arquitetura e organização (Vertical Slice)
  
  O projeto está organizado por **features** (fatiamento vertical), priorizando coesão por caso de uso.
