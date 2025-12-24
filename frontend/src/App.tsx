@@ -13,7 +13,13 @@ import { SearchInput } from "./components/SearchInput";
 import { ConfirmationDialog } from "./components/ConfirmationDialog";
 import { ContactListSkeleton } from "./components/ContactListSkeleton";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function ContactsApp() {
   const [page, setPage] = useState(1);
