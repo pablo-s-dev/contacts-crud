@@ -1,16 +1,19 @@
-import pino from 'pino';
-import { env } from '../config/env';
+import pino from "pino";
+import { env } from "../config/env";
 
 export const logger = pino({
-  level: env.NODE_ENV === 'production' ? 'info' : 'debug',
-  transport: env.NODE_ENV === 'development' ? {
-    target: 'pino-pretty',
-    options: {
-      colorize: true,
-      translateTime: 'SYS:standard',
-      ignore: 'pid,hostname',
-    },
-  } : undefined,
+  level: env.NODE_ENV === "production" ? "info" : "debug",
+  transport:
+    env.NODE_ENV === "development"
+      ? {
+          target: "pino-pretty",
+          options: {
+            colorize: true,
+            translateTime: "SYS:standard",
+            ignore: "pid,hostname",
+          },
+        }
+      : undefined,
   formatters: {
     level: (label) => {
       return { level: label };
@@ -20,6 +23,3 @@ export const logger = pino({
 });
 
 export type Logger = typeof logger;
-
-
-

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import type { Contact, ContactInput } from '../types/contact';
+import axios from "axios";
+import type { Contact, ContactInput } from "../types/contact";
 
 const CONTACTS_API_URL = import.meta.env.VITE_CONTACTS_API_URL;
 
@@ -12,7 +12,7 @@ export type GetContactsParams = {
   pageSize?: number;
   q?: string;
   sort?: string;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
 };
 
 export type GetContactsResponse = {
@@ -25,11 +25,13 @@ export type GetContactsResponse = {
 
 export const contactService = {
   getAll: async (params: GetContactsParams) => {
-    const response = await api.get<GetContactsResponse>('/contacts', { params });
+    const response = await api.get<GetContactsResponse>("/contacts", {
+      params,
+    });
     return response.data;
   },
   create: async (data: ContactInput) => {
-    const response = await api.post<Contact>('/contacts', data);
+    const response = await api.post<Contact>("/contacts", data);
     return response.data;
   },
   update: async (id: string, data: ContactInput) => {

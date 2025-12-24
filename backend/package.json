@@ -10,7 +10,10 @@
     "test:watch": "vitest",
     "migrate:dev": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
-    "seed": "prisma db seed"
+    "seed": "prisma db seed",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -42,14 +45,23 @@
     "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@faker-js/faker": "^10.1.0",
     "@types/pg": "^8.16.0",
     "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
     "@vitest/ui": "^4.0.16",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
+    "prettier": "^3.7.4",
     "prisma": "6.19.1",
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.1",
     "vitest": "^4.0.16"
   }
 }

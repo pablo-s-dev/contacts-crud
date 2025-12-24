@@ -1,6 +1,6 @@
 /**
  * Utilities for keyset pagination cursor encoding/decoding
- * 
+ *
  * Cursor format: base64 encoded JSON with sort field value and ID for tie-breaking
  * Example: { value: "John Doe", id: "uuid-here" } or { value: "2024-01-01T00:00:00Z", id: "uuid-here" }
  */
@@ -21,7 +21,7 @@ export function encodeCursor(value: string | Date, id: string): string {
     value: value instanceof Date ? value.toISOString() : value,
     id,
   };
-  return Buffer.from(JSON.stringify(cursorData)).toString('base64');
+  return Buffer.from(JSON.stringify(cursorData)).toString("base64");
 }
 
 /**
@@ -32,20 +32,25 @@ export function encodeCursor(value: string | Date, id: string): string {
  */
 export function decodeCursor(
   cursor: string,
-  sortField: string
+  sortField: string,
 ): { value: string | Date; id: string } {
   try {
-    const decoded = JSON.parse(Buffer.from(cursor, 'base64').toString()) as CursorData;
-    
+    const decoded = JSON.parse(
+      Buffer.from(cursor, "base64").toString(),
+    ) as CursorData;
+
     // Convert value to Date if sorting by createdAt
-    const value = sortField === 'createdAt' ? new Date(decoded.value) : decoded.value;
-    
+    const value =
+      sortField === "createdAt" ? new Date(decoded.value) : decoded.value;
+
     return {
       value,
       id: decoded.id,
     };
   } catch (error) {
-    throw new Error(`Invalid cursor format: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Invalid cursor format: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
   }
 }
 
@@ -61,22 +66,16 @@ export function buildCursorCondition(
   sortField: string,
   cursorValue: string | Date,
   cursorId: string,
-  sortOrder: 'asc' | 'desc'
+  sortOrder: "asc" | "desc",
 ) {
-  const comparison = sortOrder === 'asc' ? 'gt' : 'lt';
-  
+  const comparison = sortOrder === "asc" ? "gt" : "lt";
+
   return {
     OR: [
       { [sortField]: { [comparison]: cursorValue } },
       {
-        AND: [
-          { [sortField]: cursorValue },
-          { id: { [comparison]: cursorId } },
-        ],
+        AND: [{ [sortField]: cursorValue }, { id: { [comparison]: cursorId } }],
       },
     ],
   };
 }
-
-
-

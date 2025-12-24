@@ -1,16 +1,15 @@
-import Redis from 'ioredis';
-import { env } from '../config/env';
-import { logger } from './logger';
-import { cacheHits, cacheMisses } from './metrics';
+import Redis from "ioredis";
+import { logger } from "./logger";
+import { cacheHits, cacheMisses } from "./metrics";
 
 let redisClient: Redis | null = null;
-const inMemoryCache = new Map<string, { value: any; expiresAt: number }>();
+const inMemoryCache = new Map<string, { value: unknown; expiresAt: number }>();
 const DEFAULT_TTL = 300; // 5 minutes
 
 // Initialize Redis if available, otherwise use in-memory cache
 export async function initializeCache(): Promise<void> {
   const redisUrl = process.env.REDIS_URL;
-  
+
   if (redisUrl) {
     try {
       redisClient = new Redis(redisUrl, {
@@ -21,23 +20,26 @@ export async function initializeCache(): Promise<void> {
         maxRetriesPerRequest: 3,
       });
 
-      redisClient.on('error', (err) => {
-        logger.warn({ err }, 'Redis connection error, falling back to in-memory cache');
+      redisClient.on("error", (err) => {
+        logger.warn(
+          { err },
+          "Redis connection error, falling back to in-memory cache",
+        );
         redisClient = null;
       });
 
-      redisClient.on('connect', () => {
-        logger.info('Redis cache connected');
+      redisClient.on("connect", () => {
+        logger.info("Redis cache connected");
       });
 
       await redisClient.ping();
-      logger.info('Using Redis for caching');
+      logger.info("Using Redis for caching");
     } catch (err) {
-      logger.warn({ err }, 'Failed to connect to Redis, using in-memory cache');
+      logger.warn({ err }, "Failed to connect to Redis, using in-memory cache");
       redisClient = null;
     }
   } else {
-    logger.info('No REDIS_URL provided, using in-memory cache');
+    logger.info("No REDIS_URL provided, using in-memory cache");
   }
 }
 
@@ -48,31 +50,35 @@ export async function getCache<T>(key: string): Promise<T | null> {
     if (redisClient) {
       const value = await redisClient.get(cacheKey);
       if (value) {
-        cacheHits.inc({ key_prefix: 'contacts' });
+        cacheHits.inc({ key_prefix: "contacts" });
         return JSON.parse(value) as T;
       }
-      cacheMisses.inc({ key_prefix: 'contacts' });
+      cacheMisses.inc({ key_prefix: "contacts" });
       return null;
     } else {
       // In-memory cache
       const cached = inMemoryCache.get(cacheKey);
       if (cached && cached.expiresAt > Date.now()) {
-        cacheHits.inc({ key_prefix: 'contacts' });
+        cacheHits.inc({ key_prefix: "contacts" });
         return cached.value as T;
       }
       if (cached) {
         inMemoryCache.delete(cacheKey);
       }
-      cacheMisses.inc({ key_prefix: 'contacts' });
+      cacheMisses.inc({ key_prefix: "contacts" });
       return null;
     }
   } catch (err) {
-    logger.warn({ err, key }, 'Cache get error');
+    logger.warn({ err, key }, "Cache get error");
     return null;
   }
 }
 
-export async function setCache(key: string, value: any, ttl: number = DEFAULT_TTL): Promise<void> {
+export async function setCache<T>(
+  key: string,
+  value: T,
+  ttl: number = DEFAULT_TTL,
+): Promise<void> {
   const cacheKey = `contacts:${key}`;
 
   try {
@@ -81,12 +87,12 @@ export async function setCache(key: string, value: any, ttl: number = DEFAULT_TT
     } else {
       // In-memory cache
       inMemoryCache.set(cacheKey, {
-        value,
+        value: value as unknown,
         expiresAt: Date.now() + ttl * 1000,
       });
     }
   } catch (err) {
-    logger.warn({ err, key }, 'Cache set error');
+    logger.warn({ err, key }, "Cache set error");
   }
 }
 
@@ -106,27 +112,27 @@ export async function deleteCache(pattern: string): Promise<void> {
       }
     }
   } catch (err) {
-    logger.warn({ err, pattern }, 'Cache delete error');
+    logger.warn({ err, pattern }, "Cache delete error");
   }
 }
 
 export async function clearCache(): Promise<void> {
   try {
     if (redisClient) {
-      const keys = await redisClient.keys('contacts:*');
+      const keys = await redisClient.keys("contacts:*");
       if (keys.length > 0) {
         await redisClient.del(...keys);
       }
     } else {
       // In-memory cache
       for (const key of inMemoryCache.keys()) {
-        if (key.startsWith('contacts:')) {
+        if (key.startsWith("contacts:")) {
           inMemoryCache.delete(key);
         }
       }
     }
   } catch (err) {
-    logger.warn({ err }, 'Cache clear error');
+    logger.warn({ err }, "Cache clear error");
   }
 }
 
@@ -137,6 +143,3 @@ export async function closeCache(): Promise<void> {
   }
   inMemoryCache.clear();
 }
-
-
-
