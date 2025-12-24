@@ -27,6 +27,6 @@ export const GetContactsQuerySchema = z.object({
   sort: z.enum(["name", "email", "createdAt"]).optional(),
   order: z.enum(["asc", "desc"]).default("asc"),
   // Keyset pagination
-  cursor: z.string().uuid().optional(),
+  cursor: z.uuid().optional(),
   pagination: z.enum(["offset", "keyset"]).default("offset"),
 });
