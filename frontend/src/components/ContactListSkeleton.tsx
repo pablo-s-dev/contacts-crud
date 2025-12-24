@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export function ContactListSkeleton() {
+export function ContactListSkeleton({ amount = 10 }: { amount?: number }) {
   return (
     <div className="rounded-md border overflow-hidden">
       <Table>
@@ -21,7 +21,7 @@ export function ContactListSkeleton() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: amount }).map((_, i) => (
             <TableRow key={i}>
               <TableCell>
                 <div className="h-4 w-32 bg-muted animate-pulse rounded" />

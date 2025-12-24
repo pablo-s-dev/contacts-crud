@@ -107,7 +107,7 @@ function ContactsApp() {
                 Error loading contacts
               </div>
             ) : isFetching ? (
-              <ContactListSkeleton />
+              <ContactListSkeleton amount={10}/>
             ) : (
               <div className="space-y-4">
                 <ContactList
