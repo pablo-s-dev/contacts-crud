@@ -17,6 +17,26 @@ type ContactsSortField = "name" | "email" | "createdAt";
 type ContactsSortOrder = "asc" | "desc";
 type ContactsPagination = "offset" | "keyset";
 
+function column(field: string) {
+  switch (field) {
+    case 'name':
+      return Prisma.sql`name`
+    case 'email':
+      return Prisma.sql`email`
+    case "createdAt":
+      return Prisma.sql`"createdAt"`
+    default:
+      throw new Error('Invalid sort field')
+  }
+}
+function order(dir: string) {
+  return dir === 'desc'
+    ? Prisma.sql`DESC`
+    : Prisma.sql`ASC`
+}
+
+
+
 function buildContactsCacheKey(params: {
   q?: string;
   page: number;
@@ -45,8 +65,6 @@ function buildRegularSearchWhere(q: string) {
   };
 }
 
-// Raw SQL sort builder removed — not used. Prisma client ordering is used instead.
-
 async function fetchContactsOffsetPhoneSearch(params: {
   q: string;
   normalizedPhoneQuery: string;
@@ -64,7 +82,7 @@ async function fetchContactsOffsetPhoneSearch(params: {
       name ILIKE ${qLike}
       OR email ILIKE ${qLike}
       OR regexp_replace(phone, '[^0-9]', '', 'g') LIKE ${phoneLike}
-    ORDER BY ${Prisma.raw(params.sortField)} ${Prisma.raw(params.sortOrder)}
+    ORDER BY ${column(params.sortField)} ${order(params.sortOrder)}
     LIMIT ${params.pageSize} OFFSET ${(params.page - 1) * params.pageSize}`,
   );
 

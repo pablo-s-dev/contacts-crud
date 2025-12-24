@@ -100,6 +100,7 @@ describe("Contacts API Integration Tests", () => {
       url: "/v1/contacts",
       query: { q: uniqueName },
     });
+    console.log("Response Body:", response.payload);
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.payload);
     expect(body.data.some((c: Contact) => c.name === uniqueName)).toBe(true);
@@ -121,7 +122,7 @@ describe("Contacts API Integration Tests", () => {
         phone: testPhone,
       },
     });
-
+    
     expect(createRes.statusCode).toBe(201);
     const created = JSON.parse(createRes.payload);
 
@@ -131,11 +132,15 @@ describe("Contacts API Integration Tests", () => {
     // Search by full phone digits to avoid flakiness (pagination/sort + accidental collisions)
     const q = testPhone.replace(/\D/g, "");
 
+    
+
     const response = await app.inject({
       method: "GET",
       url: "/v1/contacts",
       query: { q, sort: "createdAt", order: "desc", pageSize: "50" },
     });
+
+    console.log("Response Body:", response.payload);
 
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.payload);
